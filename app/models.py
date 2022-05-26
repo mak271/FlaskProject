@@ -19,3 +19,13 @@ class Post(db.Model):
 
     def __repr__(self):
         return '<Post {}>'.format(self.body)
+
+class Employer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), index=True, unique=False)
+    surname = db.Column(db.String(64), index=True, unique=False)
+    age = db.Column(db.Integer, index=True, unique=False)
+    date_employment = db.Column(db.String, index=True, unique=False)
+
+    def __repr__(self):
+        return '<Employer {}>'.format(self.name)

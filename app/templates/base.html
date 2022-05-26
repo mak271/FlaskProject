@@ -1,16 +1,16 @@
 <html>
     <head>
         {% if title %}
-        <title>{{ title }} - microblog</title>
+        <title>{{ title }} - work</title>
         {% else %}
         <title>microblog</title>
         {% endif %}
     </head>
     <body>
         <div>
-            Microblog:
+            Work:
             <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('login') }}">Login</a>
+            <a href="{{ url_for('add_employer') }}">Add Employeer</a>
         </div>
         <hr>
         {% with messages = get_flashed_messages() %}

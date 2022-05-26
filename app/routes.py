@@ -1,34 +1,39 @@
 # -*- coding: utf-8 -*-
+
 from flask import flash, redirect, render_template, url_for
-from app import app
-from app.forms import LoginForm
+from app import app, db
+from app.forms import EmployerForm
+from app.models import Employer
+from datetime import datetime
 
 @app.route('/')
 @app.route('/index')
 def index():
-    user = {'username': 'Эльдар Рязанов'}
-    posts = [
-        {
-            'author': {'username': 'John'},
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': {'username': 'Susan'},
-            'body': 'The Avengers movie was so cool!'
-        }, 
-        {
-            'author': {'username': 'Ипполит'},
-            'body': 'Какая гадость эта ваша заливная рыба!!'
-        }
-    ]
-    return render_template('index.html', title = "Home", user = user, posts = posts)
+    return render_template('index.html', title = "Home", employers = Employer.query.all())
 
-@app.route('/login', methods = ['GET', 'POST'])
-def login():
-    form = LoginForm()
+@app.route('/deleteAll')
+def deleteAll():
+    employers = Employer.query.all()
+    for em in employers:
+        db.session.delete(em)
+    db.session.commit()
+    return redirect(url_for('index'))   
+
+@app.route('/add_employer', methods = ['GET', 'POST'])
+def add_employer():
+    form = EmployerForm()
     if form.validate_on_submit():
-        flash('Login requested for user {}, remember_me = {}'.format(
-            form.username.data, form.remember_me.data
+        flash('Name: {}, Surname: = {}, Age: {}, Date: {}'.format(
+            form.name.data, form.surname.data, form.age.data, form.date_employment.data
         ))
+        employer = Employer(
+            name = form.name.data, 
+            surname = form.surname.data, 
+            age = form.age.data, 
+            date_employment = form.date_employment.data
+        )
+        db.session.add(employer)
+        db.session.commit()
+
         return redirect(url_for('index'))
-    return render_template('login.html', title = "Sign In", form = form)
+    return render_template('add_employer.html', title = "Add emloyer", form = form)
